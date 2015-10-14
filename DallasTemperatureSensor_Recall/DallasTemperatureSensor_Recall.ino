@@ -24,11 +24,11 @@
  * Example sketch showing how to send in DS1820B OneWire temperature readings back to the controller
  * http://www.mysensors.org/build/temp
  * 
- * Improvments:
+ * Improvements:
  * - made for non blocking main loop (useful for repeater and busy nodes)
  *    block time max 15ms for sensor read procedure
- * - it will remember sensor index in EEPROM (2 bytes per sensor)
- *    in case if you need to replace or add new sensor to the 1Wire bus - all other sensors will keep sensor index
+ * - it will remember a sensor index in EEPROM (2 bytes per sensor)
+ *    in case if you need to replace or add new sensor to the 1Wire bus - all other sensors will keep own sensor index
  * 
  */
 
