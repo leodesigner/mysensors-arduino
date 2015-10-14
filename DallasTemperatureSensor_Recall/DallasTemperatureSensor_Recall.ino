@@ -24,6 +24,11 @@
  * Example sketch showing how to send in DS1820B OneWire temperature readings back to the controller
  * http://www.mysensors.org/build/temp
  * 
+ * Improvments:
+ * - made for non blocking main loop (useful for repeater and busy nodes)
+ *    block time max 15ms for sensor read procedure
+ * - it will remember sensor index in EEPROM (2 bytes per sensor)
+ *    in case if you need to replace or add new sensor to the 1Wire bus - all other sensors will keep sensor index
  * 
  */
 
@@ -33,6 +38,7 @@
 #include <OneWire.h>
 #include <SimpleTimer.h>
 
+// #define NDEBUG                        // enable local debugging information
 #define ONE_WIRE_BUS              3      // Pin where dallase sensor is connected 
 #define COMPARE_TEMP              1      // Send temperature only if changed? 1 = Yes 0 = No
 #define MAX_ATTACHED_DS18B20      16
@@ -46,7 +52,7 @@ float lastTemperature[MAX_ATTACHED_DS18B20];
 uint8_t numSensors = 0;
 uint8_t currentTsensor = 0;
 DeviceAddress dsaddr[MAX_ATTACHED_DS18B20];
-bool ts_spot[MAX_ATTACHED_DS18B20];
+bool ts_spot[MAX_ATTACHED_DS18B20]; // used spot array
 // Initialize temperature message
 MyMessage msg(0,V_TEMP);
 
@@ -55,6 +61,7 @@ SimpleTimer timer;
 
 boolean receivedConfig = false;
 boolean metric = true; 
+
 
 void setup()  
 { 
